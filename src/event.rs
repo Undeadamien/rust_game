@@ -17,8 +17,6 @@ pub enum Event {
 
 #[derive(Clone, Debug)]
 pub enum AppEvent {
-    Increment,
-    Decrement,
     Quit,
 }
 
@@ -26,6 +24,12 @@ pub enum AppEvent {
 pub struct EventHandler {
     sender: mpsc::Sender<Event>,
     receiver: mpsc::Receiver<Event>,
+}
+
+impl Default for EventHandler {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl EventHandler {

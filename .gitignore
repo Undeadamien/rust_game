@@ -1,1 +1,4 @@
 /target
+wayfarer_save.json
+*.tmp
+saves/
