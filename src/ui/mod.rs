@@ -19,7 +19,7 @@ pub fn border() -> Block<'static> {
 
 pub fn render(app: &App, frame: &mut Frame) {
     match app.state {
-        State::Play => play::render(app, frame),
+        State::Game => play::render(app, frame),
         State::Menu => menu::render(app, frame),
     }
 }

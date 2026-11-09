@@ -6,7 +6,7 @@ use ratatui::DefaultTerminal;
 #[derive(Clone, Debug)]
 pub enum State {
     Menu,
-    Play,
+    Game,
 }
 
 #[derive(Debug)]
@@ -57,13 +57,27 @@ impl App {
         Ok(())
     }
 
+    //todo: find a better way to handle state scoped keybinds
     pub fn handle_key_event(&mut self, key_event: KeyEvent) -> color_eyre::Result<()> {
-        match key_event.code {
-            KeyCode::Esc => self.events.send(AppEvent::Quit),
-            KeyCode::Char('c') if key_event.modifiers == KeyModifiers::CONTROL => {
-                self.events.send(AppEvent::Quit)
-            }
-            _ => {}
+        //debug
+        if key_event.code == KeyCode::Esc {
+            self.events.send(AppEvent::Quit);
+            return Ok(());
+        }
+        if key_event.code == KeyCode::Char('c') && key_event.modifiers == KeyModifiers::CONTROL {
+            self.events.send(AppEvent::Quit);
+            return Ok(());
+        }
+        match self.state {
+            State::Menu => match key_event.code {
+                KeyCode::Char(' ') => self.state = State::Game, //debug
+                _ => {}
+            },
+            State::Game => match key_event.code {
+                KeyCode::Char(' ') => self.state = State::Menu, //debug
+                _ => {}
+            },
+            // _ => {}
         }
         Ok(())
     }
