@@ -8,11 +8,9 @@ use ratatui::{
 mod menu;
 mod play;
 
-pub const NAME: &str = "rust_game";
-
 pub fn border() -> Block<'static> {
     Block::bordered()
-        .title(NAME)
+        .title(format!("[ {name} ]", name = "rust_game"))
         .title_alignment(Alignment::Center)
         .border_type(BorderType::Plain)
 }
