@@ -59,7 +59,8 @@ impl App {
 
     pub fn handle_key_event(&mut self, key_event: KeyEvent) -> color_eyre::Result<()> {
         match key_event.code {
-            KeyCode::Char('c' | 'C') if key_event.modifiers == KeyModifiers::CONTROL => {
+            KeyCode::Esc => self.events.send(AppEvent::Quit),
+            KeyCode::Char('c') if key_event.modifiers == KeyModifiers::CONTROL => {
                 self.events.send(AppEvent::Quit)
             }
             _ => {}
@@ -67,6 +68,7 @@ impl App {
         Ok(())
     }
 
+    //todo: check how animation should be handled
     pub fn tick(&self) {}
 
     pub fn quit(&mut self) {
