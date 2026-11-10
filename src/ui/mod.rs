@@ -5,8 +5,8 @@ use ratatui::{
     widgets::{Block, BorderType},
 };
 
+mod game;
 mod menu;
-mod play;
 
 pub fn create_border() -> Block<'static> {
     Block::bordered()
@@ -17,7 +17,7 @@ pub fn create_border() -> Block<'static> {
 
 pub fn render(app: &App, frame: &mut Frame) {
     match app.state {
-        State::Game => play::render(app, frame),
+        State::Game => game::render(app, frame),
         State::Menu => menu::render(app, frame),
     }
 }

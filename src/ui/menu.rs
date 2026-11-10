@@ -16,8 +16,6 @@ pub fn render(app: &App, frame: &mut Frame) {
     frame.render_widget(border, area);
 
     let title = Paragraph::new("Rust Game").centered();
-
-    //todo: find a way to add "> {} <" for the selected
     let items: Vec<ListItem> = app
         .menu
         .items
