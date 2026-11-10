@@ -1,8 +1,8 @@
-#![allow(unused)]
+use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
+use ratatui::DefaultTerminal;
 
 use crate::event::{AppEvent, Event, EventHandler};
-use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
-use ratatui::{DefaultTerminal, widgets::ListState};
+use crate::ui;
 
 #[derive(Clone, Copy, Debug)]
 pub struct MenuItem {
@@ -17,10 +17,10 @@ pub struct Menu {
 }
 impl Menu {
     fn next(&mut self) {
-        return self.selected = (self.selected + 1) % self.items.len();
+        return self.selected = std::cmp::min(self.selected + 1, self.items.len() - 1);
     }
     fn prev(&mut self) {
-        return self.selected = (self.selected + self.items.len() - 1) % self.items.len();
+        return self.selected = self.selected.saturating_sub(1);
     }
     fn action(&self) -> MenuAction {
         return self.items[self.selected].action;
@@ -81,7 +81,7 @@ impl App {
 
     pub fn run(mut self, mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
         while self.running {
-            terminal.draw(|frame| crate::ui::render(&self, frame))?;
+            terminal.draw(|frame| ui::render(&self, frame))?;
             self.handle_events()?;
         }
         Ok(())
@@ -91,9 +91,7 @@ impl App {
         match self.events.next()? {
             Event::Tick => self.tick(),
             Event::Crossterm(event) => match event {
-                crossterm::event::Event::Key(key_event)
-                    if key_event.kind == crossterm::event::KeyEventKind::Press =>
-                {
+                CrosstermEvent::Key(key_event) if key_event.kind == KeyEventKind::Press => {
                     self.handle_key_event(key_event)?
                 }
                 _ => {}

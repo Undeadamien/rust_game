@@ -8,7 +8,7 @@ use ratatui::{
 mod menu;
 mod play;
 
-pub fn border() -> Block<'static> {
+pub fn create_border() -> Block<'static> {
     Block::bordered()
         .title(format!("[ {name} ]", name = "rust_game"))
         .title_alignment(Alignment::Center)

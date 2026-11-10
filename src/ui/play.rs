@@ -1,7 +1,7 @@
 use crate::app::App;
 use ratatui::{Frame, widgets::Paragraph};
 
-use super::border;
+use super::create_border;
 
 pub fn render(app: &App, frame: &mut Frame) {
     let area = frame.area();
@@ -9,7 +9,7 @@ pub fn render(app: &App, frame: &mut Frame) {
         concat!("Current state: {:?}\n", "Press `Ctrl-C` to stop exit."),
         app.state
     ))
-    .block(border())
+    .block(create_border())
     .centered();
     frame.render_widget(paragraph, area);
 }
