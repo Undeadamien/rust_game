@@ -1,10 +1,9 @@
 use crate::app::{App, State};
 use crossterm::terminal;
 use ratatui::Frame;
-use ratatui::layout::{Constraint, Size};
+use ratatui::layout::Constraint;
 use ratatui::symbols::merge::MergeStrategy;
 use ratatui::text::Text;
-use ratatui::widgets::Paragraph;
 // use ratatui::widgets::Padding;
 use ratatui::{
     layout::Alignment,
