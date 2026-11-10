@@ -1,10 +1,4 @@
-use crate::app::App;
-
-pub mod app;
-pub mod event;
-pub mod game;
-pub mod logging;
-pub mod ui;
+use rust_game::{app::App, logging};
 
 fn main() -> color_eyre::Result<()> {
     logging::initialize_logging()?;

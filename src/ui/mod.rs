@@ -4,7 +4,6 @@ use ratatui::Frame;
 use ratatui::layout::Constraint;
 use ratatui::symbols::merge::MergeStrategy;
 use ratatui::text::Text;
-// use ratatui::widgets::Padding;
 use ratatui::{
     layout::Alignment,
     widgets::{Block, BorderType},
