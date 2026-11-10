@@ -1,8 +1,8 @@
-use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
-use ratatui::DefaultTerminal;
-
 use crate::event::{AppEvent, Event, EventHandler};
 use crate::ui;
+use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
+use ratatui::DefaultTerminal;
+use tracing::debug;
 
 #[derive(Clone, Copy, Debug)]
 pub struct MenuItem {
@@ -43,6 +43,7 @@ impl Default for Menu {
         }
     }
 }
+
 #[derive(Clone, Copy, Debug)]
 pub enum MenuAction {
     NewGame,
@@ -105,7 +106,7 @@ impl App {
 
     //todo: find a better way to handle state scoped keybinds
     pub fn handle_key_event(&mut self, key_event: KeyEvent) -> color_eyre::Result<()> {
-        //debug
+        debug!(?key_event);
         if key_event.code == KeyCode::Char('c') && key_event.modifiers == KeyModifiers::CONTROL {
             self.events.send(AppEvent::Quit);
             return Ok(());
