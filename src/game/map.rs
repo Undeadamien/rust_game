@@ -1,2 +1,3 @@
 struct Map {}
+
 impl Map {}

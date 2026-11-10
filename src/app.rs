@@ -1,6 +1,7 @@
 use crate::event::{AppEvent, Event, EventHandler};
 use crate::ui;
 use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
+use crossterm::terminal;
 use ratatui::DefaultTerminal;
 use tracing::debug;
 
@@ -17,13 +18,13 @@ pub struct Menu {
 }
 impl Menu {
     fn next(&mut self) {
-        return self.selected = std::cmp::min(self.selected + 1, self.items.len() - 1);
+        self.selected = std::cmp::min(self.selected + 1, self.items.len() - 1)
     }
     fn prev(&mut self) {
-        return self.selected = self.selected.saturating_sub(1);
+        self.selected = self.selected.saturating_sub(1)
     }
     fn action(&self) -> MenuAction {
-        return self.items[self.selected].action;
+        self.items[self.selected].action
     }
 }
 impl Default for Menu {
@@ -111,6 +112,13 @@ impl App {
             self.events.send(AppEvent::Quit);
             return Ok(());
         }
+        //todo: find a better way to do this
+        if let size = terminal::size().unwrap()
+            && (size.0 < 80 || size.1 < 24)
+        {
+            return Ok(());
+        }
+
         match self.state {
             State::Menu => match key_event.code {
                 KeyCode::Char(' ') => self.state = State::Game, //debug
@@ -123,7 +131,8 @@ impl App {
                 _ => {}
             },
             State::Game => match key_event.code {
-                KeyCode::Esc => self.state = State::Menu, //debug
+                KeyCode::Esc => self.state = State::Menu, //todo: replace with a menu?
+
                 _ => {}
             },
         }
