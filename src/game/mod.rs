@@ -1,1 +1,3 @@
-pub const TEST: &str = "test";
+mod map;
+
+struct Game {}

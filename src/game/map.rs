@@ -1,0 +1,2 @@
+struct Map {}
+impl Map {}
