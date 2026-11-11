@@ -2,10 +2,26 @@
 
 use rust_game::game::die::{Die, Face};
 use rust_game::game::map::{Edge, Map, Node};
+use rust_game::game::player::{Action, Effect::*, Player};
 
 fn main() {
+    debug_player();
     // debug_map();
     // debug_die();
+}
+
+fn debug_player() {
+    let mut player = Player::new(String::from("Hello world"));
+    let action = Action {
+        name: String::from("TestAction"),
+        effect: TakeGold(10),
+    };
+    println!("{}", player.gold);
+    match action.effect {
+        TakeGold(value) => player.gold = player.gold - (value as i16),
+        _ => {}
+    }
+    println!("{}", player.gold);
 }
 
 fn debug_map() {
