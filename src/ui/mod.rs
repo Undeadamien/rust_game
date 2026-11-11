@@ -36,9 +36,8 @@ fn render_small_term(_app: &App, frame: &mut Frame) {
 
 pub fn render(app: &App, frame: &mut Frame) {
     //todo: find a better way to handle a small term
-    if let size = terminal::size().unwrap()
-        && (size.0 < 80 || size.1 < 24)
-    {
+    let (width, height) = terminal::size().unwrap();
+    if width < 80 || height < 24 {
         render_small_term(app, frame);
         return;
     }

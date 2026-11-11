@@ -11,7 +11,7 @@ pub struct MenuItem {
     pub action: MenuAction,
 }
 #[derive(Debug)]
-//todo: check if we can drop pub?
+//todo: try to drop pub?
 pub struct Menu {
     pub selected: usize,
     pub items: Vec<MenuItem>,
@@ -60,6 +60,7 @@ pub enum State {
 #[derive(Debug)]
 pub struct App {
     pub running: bool,
+
     pub events: EventHandler,
     pub state: State,
     pub menu: Menu,
@@ -105,6 +106,26 @@ impl App {
         Ok(())
     }
 
+    pub fn handle_key_event_menu(&mut self, key_event: KeyEvent) {
+        match key_event.code {
+            KeyCode::Char(' ') => self.state = State::Game, //debug
+            KeyCode::Char('j') => self.menu.next(),
+            KeyCode::Char('k') => self.menu.prev(),
+            KeyCode::Enter => match self.menu.action() {
+                MenuAction::Quit => self.events.send(AppEvent::Quit),
+                MenuAction::NewGame => self.state = State::Game,
+            },
+            _ => {}
+        }
+    }
+
+    pub fn handle_key_event_game(&mut self, key_event: KeyEvent) {
+        match key_event.code {
+            KeyCode::Esc => self.state = State::Menu, //todo: replace with a menu?
+            _ => {}
+        }
+    }
+
     //todo: find a better way to handle state scoped keybinds
     pub fn handle_key_event(&mut self, key_event: KeyEvent) -> color_eyre::Result<()> {
         debug!(?key_event);
@@ -112,29 +133,16 @@ impl App {
             self.events.send(AppEvent::Quit);
             return Ok(());
         }
-        //todo: find a better way to do this
-        if let size = terminal::size().unwrap()
-            && (size.0 < 80 || size.1 < 24)
-        {
+
+        //todo: remove the hardcoded values
+        let (width, height) = terminal::size().unwrap();
+        if width < 80 || height < 24 {
             return Ok(());
         }
 
         match self.state {
-            State::Menu => match key_event.code {
-                KeyCode::Char(' ') => self.state = State::Game, //debug
-                KeyCode::Char('j') => self.menu.next(),
-                KeyCode::Char('k') => self.menu.prev(),
-                KeyCode::Enter => match self.menu.action() {
-                    MenuAction::Quit => self.events.send(AppEvent::Quit),
-                    MenuAction::NewGame => self.state = State::Game,
-                },
-                _ => {}
-            },
-            State::Game => match key_event.code {
-                KeyCode::Esc => self.state = State::Menu, //todo: replace with a menu?
-
-                _ => {}
-            },
+            State::Menu => self.handle_key_event_menu(key_event),
+            State::Game => self.handle_key_event_game(key_event),
         }
         Ok(())
     }

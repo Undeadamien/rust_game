@@ -1,1 +1,2 @@
-pub mod dice;
+pub mod die;
+pub mod map;
