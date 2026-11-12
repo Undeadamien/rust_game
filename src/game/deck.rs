@@ -12,6 +12,7 @@ impl<T> Deck<T> {
         }
     }
     pub fn shuffle(&mut self) {
+        //todo: replace with `make_rng` for a seeded generator
         self.draw_pile.shuffle(&mut rand::rng());
     }
 

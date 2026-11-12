@@ -1,27 +1,81 @@
 #![allow(dead_code)]
 
-use rust_game::game::die::{Die, Face};
+use rust_game::game::die::{DicePool, Die, Face};
+use rust_game::game::effect::Effect;
+use rust_game::game::effect::PlayerChange::{Gold, Health};
+use rust_game::game::encounter::{Check, Encounter, Kind};
 use rust_game::game::map::{Edge, Map, Node};
-use rust_game::game::player::{Action, Effect::*, Player};
+use rust_game::game::player::{Action, Player};
 
 fn main() {
+    debug_encounter();
     // debug_player();
     // debug_map();
     // debug_die();
+}
+fn debug_encounter() {
+    let encounter = Encounter {
+        name: String::from("Goblin Attack"),
+        description: String::from("A group of goblin is attacking you, defend youself!"),
+        kind: Kind::Combat,
+        checks: vec![
+            Check {
+                kind: Face::Sword,
+                difficulty: 3,
+                on_success: vec![Effect::Player(Gold(2))],
+                on_failure: vec![],
+            },
+            Check {
+                kind: Face::Shield,
+                difficulty: 2,
+                on_success: vec![],
+                on_failure: vec![Effect::Player(Health(2))],
+            },
+        ],
+    };
+    let die = Die::new(vec![
+        Face::Sword,
+        Face::Sword,
+        Face::Sword,
+        Face::Shield,
+        Face::Shield,
+        Face::Blank,
+    ]);
+
+    let dice = DicePool::new(vec![die; 4]);
+    let roll = dice.roll();
+
+    for check in encounter.checks {
+        if check.resolve(&roll) {
+            println!(
+                "Check passed with:\n{:?}->{:?}\n{:?}\n",
+                check.kind, check.difficulty, roll
+            )
+        } else {
+            println!(
+                "Check not passed with:\n{:?}->{:?}\n{:?}\n",
+                check.kind, check.difficulty, roll
+            )
+        }
+    }
 }
 
 fn debug_player() {
     let mut player = Player::new(String::from("Hello world"));
     let action = Action {
         name: String::from("TestAction"),
-        effects: vec![ChangeGold(10), ChangeGold(10), ChangeHealth(-10)],
+        effects: vec![
+            Effect::Player(Gold(10)),
+            Effect::Player(Gold(10)),
+            Effect::Player(Health(-10)),
+        ],
     };
     println!("{}", player.gold);
     for effect in action.effects {
         println!("{:?}", effect);
         match effect {
-            ChangeGold(value) => player.gold += value,
-            _ => println!("effect not applied"),
+            Effect::Player(change) => player.apply(change),
+            _ => todo!(),
         }
     }
     println!("{}", player.gold);
@@ -55,19 +109,21 @@ fn debug_map() {
 }
 
 fn debug_die() {
-    let dice = Die::new(vec![
-        Face::Attack,
-        Face::Attack,
-        Face::Attack,
-        Face::Defense,
-        Face::Defense,
+    let die = Die::new(vec![
+        Face::Sword,
+        Face::Sword,
+        Face::Sword,
+        Face::Shield,
+        Face::Shield,
         Face::Blank,
     ]);
 
-    println!("Faces: {:?}", dice.faces());
-    println!("Frequences: {:?}", dice.frequences());
-    println!("Frequence: Attack: {:?}", dice.frequences()[&Face::Attack]);
+    println!("Faces: {:?}", die.faces());
+    println!("Frequences: {:?}", die.frequences());
+    println!("Frequence: Attack: {:?}", die.frequences()[&Face::Sword]);
     for n in 0..=10 {
-        println!("Roll:  {:0>3} {:?}", n, dice.roll());
+        println!("Roll:  {:0>3} {:?}", n, die.roll());
     }
+
+    //todo: debug Dice
 }

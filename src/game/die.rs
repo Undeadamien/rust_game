@@ -4,8 +4,9 @@ use std::collections::HashMap;
 
 #[derive(Debug, Clone, Eq, Hash, PartialEq)]
 pub enum Face {
-    Attack,
-    Defense,
+    Sword,
+    Shield,
+    Magic,
     Blank,
 }
 
@@ -23,6 +24,7 @@ impl Die {
         &self.faces
     }
     pub fn roll(&self) -> Face {
+        //todo: replace with `make_rng` for a seeded generator
         self.faces.iter().choose(&mut rand::rng()).cloned().unwrap()
     }
     pub fn frequences(&self) -> HashMap<Face, usize> {
@@ -30,16 +32,21 @@ impl Die {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct DicePool {
-    dices: Vec<Die>,
+    dice: Vec<Die>,
 }
 
 impl DicePool {
-    pub fn new(dices: Vec<Die>) -> Self {
-        Self { dices }
+    pub fn new(dice: Vec<Die>) -> Self {
+        Self { dice }
     }
     pub fn dice(&self) -> &[Die] {
-        &self.dices
+        &self.dice
+    }
+    // note: rename for `roll_all`?
+    pub fn roll(&self) -> Vec<Face> {
+        self.dice.iter().map(|d| d.roll()).collect_vec()
     }
 }
 
@@ -56,14 +63,14 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_one_sided_die() {
-        Die::new(vec![Face::Attack]);
+        Die::new(vec![Face::Sword]);
     }
 
     #[test]
     fn test_frequences() {
-        let die = Die::new(vec![Face::Attack, Face::Attack, Face::Defense, Face::Blank]);
+        let die = Die::new(vec![Face::Sword, Face::Sword, Face::Shield, Face::Blank]);
         let frequences = die.frequences();
-        let expected = HashMap::from([(Face::Attack, 2), (Face::Defense, 1), (Face::Blank, 1)]);
+        let expected = HashMap::from([(Face::Sword, 2), (Face::Shield, 1), (Face::Blank, 1)]);
         assert_eq!(expected, frequences)
     }
 }
