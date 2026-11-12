@@ -9,13 +9,14 @@ pub struct Player {
 #[derive(Debug)]
 pub struct Action {
     pub name: String,
-    pub effect: Effect,
+    pub effects: Vec<Effect>,
 }
 
 #[derive(Debug)]
 pub enum Effect {
-    TakeGold(u16),
-    TakeDamage(u16),
+    //todo: add more
+    ChangeGold(i16),
+    ChangeHealth(i16),
 }
 
 impl Player {

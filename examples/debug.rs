@@ -5,7 +5,7 @@ use rust_game::game::map::{Edge, Map, Node};
 use rust_game::game::player::{Action, Effect::*, Player};
 
 fn main() {
-    debug_player();
+    // debug_player();
     // debug_map();
     // debug_die();
 }
@@ -14,12 +14,15 @@ fn debug_player() {
     let mut player = Player::new(String::from("Hello world"));
     let action = Action {
         name: String::from("TestAction"),
-        effect: TakeGold(10),
+        effects: vec![ChangeGold(10), ChangeGold(10), ChangeHealth(-10)],
     };
     println!("{}", player.gold);
-    match action.effect {
-        TakeGold(value) => player.gold = player.gold - (value as i16),
-        _ => {}
+    for effect in action.effects {
+        println!("{:?}", effect);
+        match effect {
+            ChangeGold(value) => player.gold += value,
+            _ => println!("effect not applied"),
+        }
     }
     println!("{}", player.gold);
 }
@@ -58,7 +61,7 @@ fn debug_die() {
         Face::Attack,
         Face::Defense,
         Face::Defense,
-        Face::Empty,
+        Face::Blank,
     ]);
 
     println!("Faces: {:?}", dice.faces());

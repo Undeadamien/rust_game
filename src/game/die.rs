@@ -6,7 +6,7 @@ use std::collections::HashMap;
 pub enum Face {
     Attack,
     Defense,
-    Empty,
+    Blank,
 }
 
 #[derive(Debug, Clone)]
@@ -30,15 +30,15 @@ impl Die {
     }
 }
 
-pub struct DiePool {
+pub struct DicePool {
     dices: Vec<Die>,
 }
 
-impl DiePool {
+impl DicePool {
     pub fn new(dices: Vec<Die>) -> Self {
         Self { dices: dices }
     }
-    pub fn dices(&self) -> &[Die] {
+    pub fn dice(&self) -> &[Die] {
         &self.dices
     }
 }
@@ -61,9 +61,9 @@ mod tests {
 
     #[test]
     fn test_frequences() {
-        let die = Die::new(vec![Face::Attack, Face::Attack, Face::Defense, Face::Empty]);
+        let die = Die::new(vec![Face::Attack, Face::Attack, Face::Defense, Face::Blank]);
         let frequences = die.frequences();
-        let expected = HashMap::from([(Face::Attack, 2), (Face::Defense, 1), (Face::Empty, 1)]);
+        let expected = HashMap::from([(Face::Attack, 2), (Face::Defense, 1), (Face::Blank, 1)]);
         assert_eq!(expected, frequences)
     }
 }
