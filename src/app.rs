@@ -54,7 +54,7 @@ pub enum MenuAction {
 #[derive(Clone, Debug)]
 pub enum State {
     Menu,
-    Game,
+    Game, //todo: add variant?
 }
 
 #[derive(Debug)]

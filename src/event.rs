@@ -42,6 +42,11 @@ impl EventHandler {
         let _ = self.sender.send(Event::App(app_event));
     }
 }
+impl Default for EventHandler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 struct EventThread {
     sender: mpsc::Sender<Event>,

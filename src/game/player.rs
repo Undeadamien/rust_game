@@ -23,7 +23,7 @@ impl Player {
     pub fn new(name: String) -> Self {
         assert!(!name.is_empty());
         Self {
-            name: name,
+            name,
             actions: vec![],
             gold: 0,
         }

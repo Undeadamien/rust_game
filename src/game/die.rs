@@ -17,7 +17,7 @@ pub struct Die {
 impl Die {
     pub fn new(faces: Vec<Face>) -> Self {
         assert!(faces.iter().len() >= 2);
-        Self { faces: faces }
+        Self { faces }
     }
     pub fn faces(&self) -> &[Face] {
         &self.faces
@@ -36,7 +36,7 @@ pub struct DicePool {
 
 impl DicePool {
     pub fn new(dices: Vec<Die>) -> Self {
-        Self { dices: dices }
+        Self { dices }
     }
     pub fn dice(&self) -> &[Die] {
         &self.dices

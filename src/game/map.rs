@@ -51,16 +51,21 @@ impl Map {
         self.edges.push(edge);
     }
 }
+impl Default for Map {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl Node {
     pub fn new(name: String) -> Self {
-        Self { name: name }
+        Self { name }
     }
 }
 
 impl Edge {
     pub fn new(nodes: (Node, Node)) -> Self {
-        Self { nodes: nodes }
+        Self { nodes }
     }
 
     pub fn nodes(&self) -> (Node, Node) {

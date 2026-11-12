@@ -31,6 +31,12 @@ impl<T> Deck<T> {
     }
 }
 
+impl<T> Default for Deck<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[allow(unused_imports)]
 #[cfg(test)]
 mod tests {
