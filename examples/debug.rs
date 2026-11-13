@@ -6,13 +6,32 @@ use rust_game::game::effect::PlayerChange::{Gold, Health};
 use rust_game::game::encounter::{Check, Encounter, Kind};
 use rust_game::game::map::{Edge, Map, Node};
 use rust_game::game::player::{Action, Player};
+use rust_game::game::{Game, Phase};
 
 fn main() {
-    debug_encounter();
+    debug_game();
+    // debug_encounter();
     // debug_player();
     // debug_map();
     // debug_die();
 }
+
+fn debug_game() {
+    let player = Player::new(String::from("The Hero"));
+    let map = Map::new();
+    let die: Die = Die::new(vec![
+        Face::Sword,
+        Face::Sword,
+        Face::Sword,
+        Face::Shield,
+        Face::Shield,
+        Face::Blank,
+    ]);
+    let dice = DicePool::new(vec![die; 4]);
+
+    let _game = Game::new(player, Phase::Travel, dice, map);
+}
+
 fn debug_encounter() {
     let encounter = Encounter {
         name: String::from("Goblin Attack"),
@@ -33,7 +52,8 @@ fn debug_encounter() {
             },
         ],
     };
-    let die = Die::new(vec![
+
+    let die: Die = Die::new(vec![
         Face::Sword,
         Face::Sword,
         Face::Sword,
@@ -41,7 +61,6 @@ fn debug_encounter() {
         Face::Shield,
         Face::Blank,
     ]);
-
     let dice = DicePool::new(vec![die; 4]);
     let roll = dice.roll();
 
