@@ -1,6 +1,6 @@
 use crate::game::effect::{Effect, PlayerChange};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Player {
     pub name: String,
     pub actions: Vec<Action>,
@@ -9,7 +9,7 @@ pub struct Player {
     pub health: i16, //todo: allow negative health?
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Action {
     pub name: String,
     pub effects: Vec<Effect>,

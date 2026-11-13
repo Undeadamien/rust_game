@@ -1,4 +1,8 @@
 use crate::event::{AppEvent, Event, EventHandler};
+use crate::game::die::DicePool;
+use crate::game::map::Map;
+use crate::game::player::Player;
+use crate::game::{Game, Phase};
 use crate::ui;
 use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use crossterm::terminal;
@@ -10,7 +14,7 @@ pub struct MenuItem {
     pub label: &'static str,
     pub action: MenuAction,
 }
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 //todo: try to drop pub?
 pub struct Menu {
     pub selected: usize,
@@ -53,8 +57,17 @@ pub enum MenuAction {
 
 #[derive(Clone, Debug)]
 pub enum State {
-    Menu,
-    Game, //todo: add variant?
+    Menu(Menu),
+    Game(Game),
+}
+
+fn new_game() -> Game {
+    Game::new(
+        Player::new(String::from("Hero")),
+        Phase::Travel,
+        DicePool::new(vec![]),
+        Map::new(),
+    )
 }
 
 #[derive(Debug)]
@@ -63,7 +76,6 @@ pub struct App {
 
     pub events: EventHandler,
     pub state: State,
-    pub menu: Menu,
 }
 
 impl Default for App {
@@ -71,8 +83,7 @@ impl Default for App {
         Self {
             running: true,
             events: EventHandler::new(),
-            state: State::Menu,
-            menu: Menu::default(),
+            state: State::Menu(Menu::default()),
         }
     }
 }
@@ -106,26 +117,6 @@ impl App {
         Ok(())
     }
 
-    pub fn handle_key_event_menu(&mut self, key_event: KeyEvent) {
-        match key_event.code {
-            KeyCode::Char(' ') => self.state = State::Game, //debug
-            KeyCode::Char('j') => self.menu.next(),
-            KeyCode::Char('k') => self.menu.prev(),
-            KeyCode::Enter => match self.menu.action() {
-                MenuAction::Quit => self.events.send(AppEvent::Quit),
-                MenuAction::NewGame => self.state = State::Game,
-            },
-            _ => {}
-        }
-    }
-
-    pub fn handle_key_event_game(&mut self, key_event: KeyEvent) {
-        match key_event.code {
-            KeyCode::Esc => self.state = State::Menu, //todo: replace with a menu?
-            _ => {}
-        }
-    }
-
     //todo: find a better way to handle state scoped keybinds
     pub fn handle_key_event(&mut self, key_event: KeyEvent) -> color_eyre::Result<()> {
         debug!(?key_event);
@@ -140,9 +131,24 @@ impl App {
             return Ok(());
         }
 
-        match self.state {
-            State::Menu => self.handle_key_event_menu(key_event),
-            State::Game => self.handle_key_event_game(key_event),
+        let mut next_state = None;
+        match &mut self.state {
+            State::Menu(menu) => match key_event.code {
+                KeyCode::Char('j') => menu.next(),
+                KeyCode::Char('k') => menu.prev(),
+                KeyCode::Enter => match menu.action() {
+                    MenuAction::Quit => self.events.send(AppEvent::Quit),
+                    MenuAction::NewGame => next_state = Some(State::Game(new_game())),
+                },
+                _ => {}
+            },
+            State::Game(_) if key_event.code == KeyCode::Esc => {
+                next_state = Some(State::Menu(Menu::default()));
+            }
+            State::Game(_) => {}
+        }
+        if let Some(state) = next_state {
+            self.state = state;
         }
         Ok(())
     }

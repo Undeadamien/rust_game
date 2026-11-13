@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use grid::*;
 use rust_game::game::die::{DicePool, Die, Face};
 use rust_game::game::effect::Effect;
 use rust_game::game::effect::PlayerChange::{Gold, Health};
@@ -9,11 +10,14 @@ use rust_game::game::player::{Action, Player};
 use rust_game::game::{Game, Phase};
 
 fn main() {
-    debug_game();
-    // debug_encounter();
-    // debug_player();
-    // debug_map();
-    // debug_die();
+    let mut grid: Grid<char> = Grid::from_vec(vec![' '; 16], 4);
+    grid.fill('·');
+    grid[(3, 3)] = 'X';
+    println! {"{:?}", grid}
+
+    for x in 0..grid.rows() {
+        println! {"{:?}", grid.iter_row(x).collect::<String>()}
+    }
 }
 
 fn debug_game() {

@@ -1,4 +1,4 @@
-use crate::app::App;
+use crate::app::Menu;
 use ratatui::{
     Frame,
     layout::{Constraint, Flex, Layout},
@@ -7,22 +7,16 @@ use ratatui::{
     widgets::{List, ListItem, Paragraph},
 };
 
-use super::create_border;
-
-pub fn render(app: &App, frame: &mut Frame) {
+pub fn render(menu: &Menu, frame: &mut Frame) {
     let area = frame.area();
-    let border = create_border();
-    let inner = border.inner(area);
-    frame.render_widget(border, area);
 
     let title = Paragraph::new("Rust Game").centered();
-    let items: Vec<ListItem> = app
-        .menu
+    let items: Vec<ListItem> = menu
         .items
         .iter()
         .enumerate()
         .map(|(i, item)| {
-            let sel = i == app.menu.selected;
+            let sel = i == menu.selected;
             ListItem::new(
                 Line::from(vec![
                     Span::raw(if sel { "> " } else { "" }),
@@ -33,7 +27,7 @@ pub fn render(app: &App, frame: &mut Frame) {
             )
         })
         .collect();
-    let width = (app.menu.items.iter().map(|f| f.label.len()).max().unwrap() + 4) as u16;
+    let width = (menu.items.iter().map(|f| f.label.len()).max().unwrap() + 4) as u16;
     let list = List::new(items).highlight_style(Style::new());
 
     let [top, _, bottom] = Layout::vertical([
@@ -42,7 +36,7 @@ pub fn render(app: &App, frame: &mut Frame) {
         Constraint::Length(list.len() as u16),
     ])
     .flex(Flex::Center)
-    .areas(inner);
+    .areas(area);
 
     let [list_slot] = Layout::horizontal([Constraint::Length(width)])
         .flex(Flex::Center)

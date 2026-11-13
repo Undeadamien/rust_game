@@ -19,6 +19,7 @@ pub enum Phase {
     Encounter,
 }
 
+#[derive(Debug, Clone)]
 pub struct Game {
     pub player: Player,
     pub phase: Phase,
