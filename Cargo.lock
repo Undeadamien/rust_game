@@ -554,6 +554,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1033caf0b349c518623b5396bfb2cf0bddf44f0306d543a250e5743297aafd10"
 
 [[package]]
+name = "grid"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b40ca9252762c466af32d0b1002e91e4e1bc5398f77455e55474deb466355ff5"
+
+[[package]]
 name = "hashbrown"
 version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1297,12 +1303,14 @@ version = "0.1.0"
 dependencies = [
  "color-eyre",
  "crossterm",
+ "grid",
  "itertools 0.15.0",
  "rand 0.10.3",
  "ratatui",
  "tracing",
  "tracing-error",
  "tracing-subscriber",
+ "unicode-segmentation",
 ]
 
 [[package]]
