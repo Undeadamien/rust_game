@@ -1,8 +1,9 @@
 use crate::event::{AppEvent, Event, EventHandler};
 use crate::game::die::DicePool;
-use crate::game::map::Map;
+use crate::game::map::Terrain;
+use crate::game::map::{Direction, Map};
 use crate::game::player::Player;
-use crate::game::{Game, Phase};
+use crate::game::{Command, Game, Phase};
 use crate::ui;
 use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use crossterm::terminal;
@@ -62,11 +63,23 @@ pub enum State {
 }
 
 fn new_game() -> Game {
+    let mut map = Map::new();
+
+    let city = map.add_node(String::from("City"), Terrain::City, 0, 0);
+    let forest = map.add_node(String::from("Forest"), Terrain::Forest, 1, 0);
+    let ruin = map.add_node(String::from("Ruin"), Terrain::Ruin, 0, 1);
+
+    map.add_edge(city, forest);
+    map.add_edge(city, ruin);
+
+    debug!("{:#?}", map);
+
     Game::new(
         Player::new(String::from("Hero")),
         Phase::Travel,
         DicePool::new(vec![]),
-        Map::new(),
+        map,
+        forest,
     )
 }
 
@@ -142,10 +155,14 @@ impl App {
                 },
                 _ => {}
             },
-            State::Game(_) if key_event.code == KeyCode::Esc => {
-                next_state = Some(State::Menu(Menu::default()));
-            }
-            State::Game(_) => {}
+            State::Game(game) => match key_event.code {
+                KeyCode::Esc => next_state = Some(State::Menu(Menu::default())),
+                KeyCode::Char('k') => game.update(Command::Travel(Direction::North)),
+                KeyCode::Char('j') => game.update(Command::Travel(Direction::South)),
+                KeyCode::Char('h') => game.update(Command::Travel(Direction::West)),
+                KeyCode::Char('l') => game.update(Command::Travel(Direction::East)),
+                _ => {}
+            },
         }
         if let Some(state) = next_state {
             self.state = state;
