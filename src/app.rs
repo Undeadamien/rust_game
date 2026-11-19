@@ -1,5 +1,4 @@
 use crate::event::{AppEvent, Event, EventHandler};
-use crate::game::die::DicePool;
 use crate::game::map::Terrain;
 use crate::game::map::{Direction, Map};
 use crate::game::player::Player;
@@ -77,7 +76,6 @@ fn new_game() -> Game {
     Game::new(
         Player::new(String::from("Hero")),
         Phase::Travel,
-        DicePool::new(vec![]),
         map,
         forest,
     )

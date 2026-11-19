@@ -1,11 +1,8 @@
 pub mod deck;
-pub mod die;
 pub mod effect;
-pub mod encounter;
 pub mod map;
 pub mod player;
 
-use crate::game::die::DicePool;
 use crate::game::map::{Direction, Map};
 use crate::game::player::Player;
 
@@ -23,18 +20,16 @@ pub enum Phase {
 pub struct Game {
     pub player: Player,
     pub phase: Phase,
-    pub dice: DicePool,
     pub map: Map,
     pub current: u16,
 }
 
 impl Game {
     //todo: find a better way to init
-    pub fn new(player: Player, phase: Phase, dice: DicePool, map: Map, current: u16) -> Self {
+    pub fn new(player: Player, phase: Phase, map: Map, current: u16) -> Self {
         Self {
             player,
             phase,
-            dice,
             map,
             current,
         }
