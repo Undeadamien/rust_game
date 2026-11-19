@@ -1,19 +1,12 @@
-use crate::game::effect::{Effect, PlayerChange};
+use crate::game::effect::PlayerChange;
 
 #[derive(Debug, Clone)]
 pub struct Player {
     pub name: String,
-    pub actions: Vec<Action>,
 
     pub gold: i16,
     pub health: u16, //todo: allow negative health?
     pub health_max: u16,
-}
-
-#[derive(Debug, Clone)]
-pub struct Action {
-    pub name: String,
-    pub effects: Vec<Effect>,
 }
 
 impl Player {
@@ -21,7 +14,6 @@ impl Player {
         assert!(!name.is_empty());
         Self {
             name,
-            actions: vec![],
             gold: 0,
             health: 3,
             health_max: 3,
