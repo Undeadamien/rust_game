@@ -1,8 +1,5 @@
 use crate::event::{AppEvent, Event, EventHandler};
-use crate::game::map::Terrain;
-use crate::game::map::{Direction, Map};
-use crate::game::player::Player;
-use crate::game::{Command, Game, Phase};
+use crate::game::{Game, player::Player};
 use crate::ui;
 use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use crossterm::terminal;
@@ -61,23 +58,7 @@ pub enum State {
 }
 
 fn new_game() -> Game {
-    let mut map = Map::new();
-
-    let city = map.add_node(String::from("City"), Terrain::City, 0, 0);
-    let forest = map.add_node(String::from("Forest"), Terrain::Forest, 1, 0);
-    let ruin = map.add_node(String::from("Ruin"), Terrain::Ruin, 0, 1);
-
-    map.add_edge(city, forest);
-    map.add_edge(city, ruin);
-
-    debug!("{:#?}", map);
-
-    Game::new(
-        Player::new(String::from("Hero")),
-        Phase::Travel,
-        map,
-        forest,
-    )
+    Game::new(Player::new(String::from("Hero")))
 }
 
 #[derive(Debug)]
@@ -152,12 +133,8 @@ impl App {
                 },
                 _ => {}
             },
-            State::Game(game) => match key_event.code {
+            State::Game(_game) => match key_event.code {
                 KeyCode::Esc => next_state = Some(State::Menu(Menu::default())),
-                KeyCode::Char('k') => game.update(Command::Travel(Direction::North)),
-                KeyCode::Char('j') => game.update(Command::Travel(Direction::South)),
-                KeyCode::Char('h') => game.update(Command::Travel(Direction::West)),
-                KeyCode::Char('l') => game.update(Command::Travel(Direction::East)),
                 _ => {}
             },
         }
