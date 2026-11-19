@@ -1,4 +1,4 @@
-pub mod deck;
+pub mod card;
 pub mod effect;
 pub mod map;
 pub mod player;
