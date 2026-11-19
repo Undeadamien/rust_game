@@ -1,4 +1,5 @@
 pub mod card;
+pub mod combat;
 pub mod effect;
 pub mod map;
 pub mod player;
