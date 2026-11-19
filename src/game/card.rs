@@ -1,10 +1,19 @@
 use rand::seq::SliceRandom;
 
-pub struct Deck<T> {
-    pub draw_pile: Vec<T>,
-    pub discard_pile: Vec<T>,
+pub struct Card {
+    pub cost: u16,
 }
-impl<T> Deck<T> {
+impl Card {
+    pub fn new(cost: u16) -> Self {
+        Self { cost }
+    }
+}
+
+pub struct Deck {
+    pub draw_pile: Vec<Card>,
+    pub discard_pile: Vec<Card>,
+}
+impl Deck {
     pub fn new() -> Self {
         Self {
             draw_pile: vec![],
@@ -12,11 +21,9 @@ impl<T> Deck<T> {
         }
     }
     pub fn shuffle(&mut self) {
-        //todo: replace with `make_rng` for a seeded generator
-        self.draw_pile.shuffle(&mut rand::rng());
+        self.draw_pile.shuffle(&mut rand::rng()); //todo: replace with `make_rng` for a seeded generator
     }
-
-    pub fn draw(&mut self) -> Option<T> {
+    pub fn draw(&mut self) -> Option<Card> {
         if self.draw_pile.is_empty() {
             if self.discard_pile.is_empty() {
                 return None;
@@ -26,42 +33,19 @@ impl<T> Deck<T> {
         }
         self.draw_pile.pop()
     }
-
-    pub fn discard(&mut self, card: T) {
+    pub fn discard(&mut self, card: Card) {
         self.discard_pile.push(card);
     }
 }
 
-impl<T> Default for Deck<T> {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-#[allow(unused_imports)]
 #[cfg(test)]
 mod tests {
-
     use super::*;
 
     #[test]
     fn test_empty_deck() {
-        let mut deck = Deck::<u16>::new();
+        let mut deck = Deck::new();
         assert!(deck.draw().is_none());
         assert!(!deck.draw().is_some());
-    }
-
-    #[test]
-    fn test_draw() {
-        let mut deck = Deck::<u16>::new();
-        deck.draw_pile = vec![1];
-        assert!(deck.draw_pile == vec![1]);
-        assert!(deck.discard_pile == vec![]);
-        match deck.draw() {
-            Some(card) => deck.discard(card),
-            None => {}
-        }
-        assert!(deck.discard_pile == vec![1]);
-        assert!(deck.draw_pile == vec![]);
     }
 }

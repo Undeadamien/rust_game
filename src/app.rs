@@ -15,7 +15,6 @@ pub struct MenuItem {
     pub action: MenuAction,
 }
 #[derive(Debug, Clone)]
-//todo: try to drop pub?
 pub struct Menu {
     pub selected: usize,
     pub items: Vec<MenuItem>,
